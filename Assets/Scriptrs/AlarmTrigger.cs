@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AlarmTrigger : MonoBehaviour
 {
+    [HideInInspector] public event UnityAction OnEnter;
+    [HideInInspector] public event UnityAction OnExit;
+
     [SerializeField] private float _duration = 5f;
     private float _delta = 0;
     private int _deltaFactor = -1;
@@ -14,12 +18,14 @@ public class AlarmTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        _deltaFactor = 1;
+        OnEnter?.Invoke();
+        //_deltaFactor = 1;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        _deltaFactor = -1;
+        OnExit?.Invoke();
+        //_deltaFactor = -1;
     }
 
     private void Update()
