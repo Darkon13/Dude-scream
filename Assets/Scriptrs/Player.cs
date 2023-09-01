@@ -1,15 +1,20 @@
 using UnityEngine;
 
 public class Player : Actor
-{ 
-    private Animator _animator;
-    private PlayerCommandInvoker _invoker;
-
+{
     private void Start()
     {
-        //_invoker = new PlayerCommandInvoker(this);
-        Speed = 5;
-        Transform = GetComponent<Transform>();
-        _animator = GetComponent<Animator>();
+        Rigidbody = GetComponent<Rigidbody2D>();
+        Collider = GetComponent<BoxCollider2D>();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        if (Normal != null && VelocityDirection != null)
+        {
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + Normal);
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + VelocityDirection.normalized);
+        }
     }
 }

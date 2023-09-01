@@ -7,11 +7,11 @@ public class SoundPlayer : MonoBehaviour
     [SerializeField] private AlarmTrigger _alarmTrigger;
     [SerializeField] private float _duration = 1f;
     [SerializeField] private float _tickPerSecond = 1f;
-    [SerializeField] private float _maxVolume = 1f;
-    [SerializeField] private float _minVolume = 0;
-    IEnumerator _coroutine;
-    private float _delta;
-    AudioSource _audioSource;
+    private float _maxVolume = 1f;
+    private float _minVolume = 0;
+
+    private IEnumerator _coroutine;
+    private AudioSource _audioSource;
 
     private void OnEnable()
     {
@@ -33,28 +33,27 @@ public class SoundPlayer : MonoBehaviour
 
     private void Start()
     {
-        _delta = (_maxVolume - _minVolume) / _duration / _tickPerSecond;
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = _minVolume;
     }
 
-    private IEnumerator ChangeVolume(float delta)
+    private IEnumerator ChangeVolume(float target)
     {
-        //Debug.Log("111");
-        float remainingTime = _duration - (_audioSource.volume - _minVolume) / (_maxVolume - _minVolume) / _delta / _tickPerSecond;
+        float delta = (_maxVolume - _minVolume) / _duration / _tickPerSecond;
         float deltaTime = _duration / _tickPerSecond;
         WaitForSecondsRealtime waitForSeconds = new WaitForSecondsRealtime(deltaTime);
-        Debug.Log(remainingTime);
-        Debug.Log(deltaTime);
 
-        if (delta > 0)
+        if (target == _maxVolume)
         {
             _audioSource.Play();
         }
-
-        while(remainingTime > 0)
+        else
         {
-            remainingTime -= deltaTime;
+            delta *= -1;
+        }
+
+        while(_audioSource.volume != target)
+        {
             _audioSource.volume = Mathf.Clamp(_audioSource.volume + delta, _minVolume, _maxVolume);
 
             yield return waitForSeconds;
@@ -72,7 +71,7 @@ public class SoundPlayer : MonoBehaviour
         if(_coroutine != null)
             StopCoroutine(_coroutine);
 
-        _coroutine = ChangeVolume(_delta);
+        _coroutine = ChangeVolume(_maxVolume);
         StartCoroutine(_coroutine);
     }
 
@@ -82,7 +81,7 @@ public class SoundPlayer : MonoBehaviour
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
-        _coroutine = ChangeVolume(-_delta);
+        _coroutine = ChangeVolume(_minVolume);
         StartCoroutine(_coroutine);
     }
 }

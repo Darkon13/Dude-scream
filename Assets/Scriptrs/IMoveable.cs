@@ -2,5 +2,7 @@ using UnityEngine;
 
 public interface IMoveable
 {
-    public void MoveToDirection(Vector3 direction);
+    public void MoveRight();
+    public void MoveLeft();
+    public void Jump();
 }

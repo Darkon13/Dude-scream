@@ -11,6 +11,7 @@ public class PlayerCommandInvoker : CommandInvoker
 
         Binder.AddCommand(KeyCode.A, new WalkLeftCommand());
         Binder.AddCommand(KeyCode.D, new WalkRightCommand());
+        Binder.AddCommand(KeyCode.Space, new JumpCommand());
     }
 
     private void Update()
